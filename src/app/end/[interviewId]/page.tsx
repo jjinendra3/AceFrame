@@ -9,7 +9,6 @@ export default function Home() {
     async function fetchEvaluation() {
       const pathName = window.location.pathname;
       const interviewId = pathName.split("/").pop();
-      console.log(interviewId)
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
@@ -24,7 +23,6 @@ export default function Home() {
         throw new Error("Failed to fetch evaluation");
       }
       const data = await response.json();
-      console.log(data);
       if (data.success) {
         setEvaluation(data.data);
       } else {

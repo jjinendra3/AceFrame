@@ -14,7 +14,6 @@ export async function POST(req: Request) {
     if (!response) {
       throw new Error("Failed to generate response");
     }
-    console.log(response)
     return new Response(
       JSON.stringify({
         success: true,

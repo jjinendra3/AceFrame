@@ -58,7 +58,6 @@ export async function generateResponseNode(state: InterviewStateType) {
         if (!systemInstruction || typeof systemInstruction !== "string") {
             throw new Error("Invalid system instruction");
         }
-
         const structuredLlm = aiModel.withStructuredOutput(responseSchema);
 
         const response = await structuredLlm.invoke([

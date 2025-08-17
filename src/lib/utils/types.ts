@@ -40,7 +40,9 @@ export type InterviewStore = {
   seconds: string | null;
   minutes: string | null;
   subtitles: string | null;
+  interviewEnded: boolean;
   conversation: Conversation[];
+  currentAudio: HTMLAudioElement | null;  
   setConversation: (conversation: Conversation[]) => void;
   setSubtitles: (subtitles: string | null) => void;
   startInterview: (round: string) => Promise<InterviewID>;
@@ -49,11 +51,14 @@ export type InterviewStore = {
   setIsLoading: (loading: boolean) => void;
   setAiSpeaking: (speaking: boolean) => void;
   setIsRecording: (recording: boolean) => void;
+  setInterviewEnded: (ended: boolean) => void;
   playPing: () => Promise<void>;
   startRecording: () => void;
   stopRecording: () => void;
+  stopAudio: () => void;
   record: () => void;
   playAudio: (audioBlob: Blob) => void;
   sendAudio: (audioBlob: Blob) => void;
+  endInterview: () => Promise<void>;
   endRecording: () => void;
 };

@@ -1,10 +1,10 @@
 import { StateGraph, START, END } from "@langchain/langgraph";
 import { ResumeState } from "./state";
-import { generateResumeReview, generateVectorEmbeddingOfPdf } from "./node";
+import { generateResumeReview, extractPDFText } from "./node";
 
 function createResumeGraph() {
     const workflow = new StateGraph(ResumeState)
-        .addNode("generate_pdf_embedding", generateVectorEmbeddingOfPdf)
+        .addNode("generate_pdf_embedding", extractPDFText)
         .addNode("generate_review", generateResumeReview)
         .addEdge(START, "generate_pdf_embedding")
         .addConditionalEdges('generate_pdf_embedding', (state) => state.country !== "Not Found" ? "continue" : "end", {

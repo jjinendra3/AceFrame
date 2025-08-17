@@ -55,7 +55,7 @@
     "styled-components": "^6.1.14",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "3.23.8",
+    "zod": "^4.0.17",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -71,6 +71,7 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@tensorflow-models/universal-sentence-encoder": "0.0.0"
+    "@tensorflow-models/universal-sentence-encoder": "0.0.0",
+    "zod": "4.0.0-next.71"
   }
 }

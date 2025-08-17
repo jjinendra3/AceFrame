@@ -19,11 +19,9 @@ export async function POST(req: Request) {
       country: country,
     }
     const response = await graph.invoke(initiateState)
-    console.log(response);
     if (response.country === "Not Found") throw new Error("Country not found");
     return Response.json(response);
-  } catch (error) {
-    console.error(error);
+  } catch {
     return Response.json(
       { error: "Failed to process resume" },
       { status: 500 },

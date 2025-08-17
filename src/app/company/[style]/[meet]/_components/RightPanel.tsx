@@ -27,7 +27,7 @@ export default function RightPanel({
 }) {
   const router = useRouter();
   const interviewId = generalStore((state) => state.interviewId);
-  const { isRecording, aiSpeaking, stopRecording } = interviewStore();
+  const { isRecording, aiSpeaking, stopRecording, endInterview } = interviewStore();
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function RightPanel({
               mediaStream.getTracks().forEach((track) => track.stop());
             }
             await stopConversation();
-            await stopRecording();
+            await endInterview();
             router.push(`/end/${interviewId}`);
           }}
         >

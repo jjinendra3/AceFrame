@@ -46,15 +46,12 @@ export const generateEvaluationReport = async (state: EvaluationStateType) => {
         if (!systemInstruction || typeof systemInstruction !== "string") {
             throw new Error("Failed to retrieve valid system instruction");
         }
-        console.log(systemInstruction);
-        console.log(state.messages);
         const structuredLlm = aiModel.withStructuredOutput(InterviewEvaluationSchema);
         const response = await structuredLlm.invoke([
             new SystemMessage(systemInstruction),
             ...state.messages,
             new HumanMessage(`Please take the entire chat between the user and the assistant into account when generating the report. The output should be strictly in html and contain all relevant information. The HTML will be converted to PDF, so please ensure it is well-formed.`)
         ]);
-        console.log("Evaluation Report Generated:", response);
         return {
             ...state,
             report: response.report,

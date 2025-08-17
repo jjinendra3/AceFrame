@@ -10,9 +10,8 @@ const schema = z.object({
     detailedReview: z.string(),
 });
 
-export const generateVectorEmbeddingOfPdf = async (state: ResumeStateType) => {
+export const extractPDFText = async (state: ResumeStateType) => {
     try {
-        console.log("Generating vector embedding for PDF...");
         const { resume } = state;
 
         if (!resume) {
@@ -36,9 +35,7 @@ export const generateVectorEmbeddingOfPdf = async (state: ResumeStateType) => {
 }
 
 export const generateResumeReview = async (state: ResumeStateType) => {
-    console.log("Generating resume review...");
     const { textResume, country } = state;
-    console.log(textResume)
     try {
         const systemInstruction = await getPrompts('resume');
         const structuredLlm = aiModel.withStructuredOutput(schema);
