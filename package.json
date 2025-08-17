@@ -68,5 +68,8 @@
     "prisma": "^6.7.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@tensorflow-models/universal-sentence-encoder": "npm:@empty@0.0.0"
   }
 }
