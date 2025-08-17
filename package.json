@@ -75,7 +75,6 @@
     "zod": "^4.0.17"
   },
   "overrides": {
-    "@tensorflow-models/universal-sentence-encoder": "0.0.0",
-    "zod": "^4.0.17"
+    "@tensorflow-models/universal-sentence-encoder": "0.0.0"
   }
 }
