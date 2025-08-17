@@ -68,12 +68,14 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
         body: formData,
       });
       const data = await firstAudio.json();
+      console.log(data);
       const audioBlob = new Blob(
         [Uint8Array.from(atob(data.audio), (c) => c.charCodeAt(0))],
         { type: "audio/wav" }
       );
       generalStore.getState().setStartAudio(audioBlob);
       set({ subtitles: data.reply });
+      get().playAudio(audioBlob);
       return {
         success: true,
         id: res.id,
@@ -84,32 +86,6 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
         success: false,
         id: "",
       };
-    }
-  },
-  endInterview: async () => {
-    try {
-      if (!generalStore.getState().candidate) return null;
-      const interviewId = generalStore.getState().interviewId;
-      if (!interviewId) return null;
-      console.log("Ending interview", interviewId);
-      generalStore.getState().setInterviewId(null);
-      await MEDIA_RECORDER.stop();
-      const response = await fetch(`/api/end`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          interviewId: interviewId,
-        }),
-      });
-      const data = await response.json();
-      if (response.status === 500) return null;
-      console.log(data);
-      return data.data as string;
-    } catch (error) {
-      console.error("PDF download error:", error);
-      return null;
     }
   },
   startRecording: async () => {

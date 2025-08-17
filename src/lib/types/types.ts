@@ -41,4 +41,6 @@ export interface InterviewEvaluation {
     responseEvaluation: string;
     improvementSuggestion: string;
   }[];
+
+  report: string;
 }

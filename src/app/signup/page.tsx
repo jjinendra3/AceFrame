@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Mail, Lock, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-// import { SuccessLottiePlayer } from "@/components/lottie/dotlottie";
 import { auth } from "@/lib/utils/firebase";
 import LoginWithGoogle from "@/components/loginWithGoogle";
 export default function Signup() {
@@ -16,25 +15,9 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [signed, setSigned] = useState<boolean>(false);
-  // const signUp = generalStore((state) => state.signup);
-  // const handleSignup = async () => {
-  //   try {
-  //     const response = await signUp(email, name, password);
-  //     if (!response.success) {
-  //       throw new Error(response.message);
-  //     }
-  //     setSigned(true);
-  //     setTimeout(() => {
-  //       route.push("/");
-  //     }, 1000);
-  //     //eslint-disable-next-line
-  //   } catch (error: any) {
-  //     toaster(error);
-  //   }
-  // };
   useEffect(() => {
     route.push("/");
+    // eslint-disable-next-line
   }, []);
 
   return (

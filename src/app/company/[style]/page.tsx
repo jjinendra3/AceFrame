@@ -8,6 +8,7 @@ import { UserCircle, Code } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { generalStore } from "@/lib/utils/generalStore";
 import { toast } from "sonner";
+import { interviewStore } from "@/lib/utils/interviewStore";
 
 const interviewTypes = [
   {
@@ -29,6 +30,7 @@ export default function ChooseInterviewType() {
   const router = useRouter();
   const pathname = usePathname();
   const candidate = generalStore((state) => state.candidate);
+  const introduction = interviewStore((state) => state.startInterview)
   if (
     !(
       pathname.split("/")[2] == "meta" ||
@@ -56,9 +58,8 @@ export default function ChooseInterviewType() {
         {interviewTypes.map((type, index) => (
           <motion.button
             key={type.name}
-            className={`bg-white rounded-lg p-6 flex flex-col items-center justify-center transition-all ${
-              selectedType === type.code ? "ring-4 ring-primary" : ""
-            }`}
+            className={`bg-white rounded-lg p-6 flex flex-col items-center justify-center transition-all ${selectedType === type.code ? "ring-4 ring-primary" : ""
+              }`}
             onClick={() => setSelectedType(type.code)}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -85,9 +86,8 @@ export default function ChooseInterviewType() {
         <Button
           size="lg"
           className="bg-primary text-primary-foreground hover:bg-primary/90"
-          disabled={!selectedType}
+          disabled={!selectedType || selectedType === 'dsa'}
           onClick={async () => {
-            console.log(candidate);
             if (!candidate) {
               router.push("/");
               toast.error("Please login to start interview");
@@ -96,12 +96,12 @@ export default function ChooseInterviewType() {
             const load = toast.loading("Loading Interview...");
             try {
               const roundParam = `${pathname.split("/")[2]}-${selectedType}`;
-              // const response = await introduction(roundParam);
-              // if (!response.success) {
-              //   throw new Error("Failed to start interview");
-              // }
-              const uuid = crypto.randomUUID();
-              router.push(`/company/${roundParam}/${uuid}`);
+              const response = await introduction(roundParam);
+              if (!response.success) {
+                throw new Error("Failed to start interview");
+              }
+
+              router.push(`/company/${roundParam}/${response.id}`);
               toast.success("Lets Go!🚀", {
                 id: load,
               });

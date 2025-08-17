@@ -1,6 +1,11 @@
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY,
+import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
+
+export const aiModel = new ChatGoogleGenerativeAI({
+  model: "gemini-2.5-flash",
+  temperature: 0.3
 });
 
-export const GEMINI_1_5_FLASH = google("gemini-2.0-flash-001");
+
+export const aiEmbeddings = new GoogleGenerativeAIEmbeddings({
+  model: "text-embedding-004",
+});

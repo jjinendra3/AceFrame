@@ -18,12 +18,8 @@ export type GeneralStore = {
   setStartAudio: (audio: Blob | null) => void;
   setInterviewId: (id: string | null) => void;
   setCandidate: (id: string, name: string, email: string) => void;
-
-  // signup: (email: string, name: string, password: string) => Promise<Auth>;
-  // login: (email: string, password: string) => Promise<Auth>;
   logout: () => Promise<Auth>;
   loginWithGoogle: () => Promise<Auth>;
-  // loginWithGitHub: () => Promise<Auth>;
 
   rehydrateState?: () => void;
 };
@@ -48,7 +44,6 @@ export type InterviewStore = {
   setConversation: (conversation: Conversation[]) => void;
   setSubtitles: (subtitles: string | null) => void;
   startInterview: (round: string) => Promise<InterviewID>;
-  endInterview: () => Promise<string | null>;
   setSeconds: (seconds: string | null) => void;
   setMinutes: (minutes: string | null) => void;
   setIsLoading: (loading: boolean) => void;

@@ -61,27 +61,6 @@ export const generalStore = create<GeneralStore>()(
           return { message: error!.toString(), success: false };
         }
       },
-      // loginWithGitHub: async () => {
-      //   try {
-      //     const provider = new GithubAuthProvider();
-      //     provider.addScope("user:email");
-      //     await signInWithPopup(auth, provider);
-      //     await onAuthStateChanged(auth, async (user) => {
-      //       if (!user) return;
-      //       set({
-      //         candidate: {
-      //           id: user.uid,
-      //           name: user.displayName || "",
-      //           email: user.email || "",
-      //         },
-      //       });
-      //     });
-      //     return { message: "User Login Successful!", success: true };
-      //   } catch (error) {
-      //     console.error(error);
-      //     return { message: error!.toString(), success: false };
-      //   }
-      // },
       logout: async () => {
         try {
           await auth.signOut();
