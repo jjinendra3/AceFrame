@@ -70,6 +70,6 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@tensorflow-models/universal-sentence-encoder": "npm:@empty@0.0.0"
+    "@tensorflow-models/universal-sentence-encoder": "0.0.0"
   }
 }
