@@ -40,7 +40,7 @@ export default function Home() {
               className="text-foreground hover:text-primary"
               asChild
             >
-              <Link href="/code" className="text-white text-lg">
+              <Link href="https://github.com/jjinendra3/aceframe" target="_blank" className="text-white text-lg">
                 Code
               </Link>
             </Button>

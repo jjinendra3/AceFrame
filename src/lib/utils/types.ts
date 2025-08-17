@@ -18,12 +18,8 @@ export type GeneralStore = {
   setStartAudio: (audio: Blob | null) => void;
   setInterviewId: (id: string | null) => void;
   setCandidate: (id: string, name: string, email: string) => void;
-
-  // signup: (email: string, name: string, password: string) => Promise<Auth>;
-  // login: (email: string, password: string) => Promise<Auth>;
   logout: () => Promise<Auth>;
   loginWithGoogle: () => Promise<Auth>;
-  // loginWithGitHub: () => Promise<Auth>;
 
   rehydrateState?: () => void;
 };
@@ -44,21 +40,25 @@ export type InterviewStore = {
   seconds: string | null;
   minutes: string | null;
   subtitles: string | null;
+  interviewEnded: boolean;
   conversation: Conversation[];
+  currentAudio: HTMLAudioElement | null;  
   setConversation: (conversation: Conversation[]) => void;
   setSubtitles: (subtitles: string | null) => void;
   startInterview: (round: string) => Promise<InterviewID>;
-  endInterview: () => Promise<string | null>;
   setSeconds: (seconds: string | null) => void;
   setMinutes: (minutes: string | null) => void;
   setIsLoading: (loading: boolean) => void;
   setAiSpeaking: (speaking: boolean) => void;
   setIsRecording: (recording: boolean) => void;
+  setInterviewEnded: (ended: boolean) => void;
   playPing: () => Promise<void>;
   startRecording: () => void;
   stopRecording: () => void;
+  stopAudio: () => void;
   record: () => void;
   playAudio: (audioBlob: Blob) => void;
   sendAudio: (audioBlob: Blob) => void;
+  endInterview: () => Promise<void>;
   endRecording: () => void;
 };

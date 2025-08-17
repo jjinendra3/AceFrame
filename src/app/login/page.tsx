@@ -7,37 +7,19 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Mail, Lock } from "lucide-react";
 import { toaster } from "@/components/toast";
-// import { generalStore } from "@/lib/utils/generalStore";
 import { useRouter } from "next/navigation";
 import LoginWithGoogle from "@/components/loginWithGoogle";
 export default function Login() {
   const route = useRouter();
-  // const candidate = generalStore((state) => state.candidate);
 
   useEffect(() => {
     route.push("/");
+    // eslint-disable-next-line
   }, []);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isOtpRequested, setIsOtpRequested] = useState(false);
-  // const [loggedIn, setLoggedIn] = useState(false);
-  // const login = generalStore((state) => state.login);
-  // const handleLogin = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await login(email, password);
-  //     if (!response.success) throw new Error(response.message);
-  //     setLoggedIn(true);
-  //     setTimeout(() => {
-  //       route.push("/company");
-  //     }, 300);
-  //     //eslint-disable-next-line
-  //   } catch (error: any) {
-  //     toaster(error);
-  //     return;
-  //   }
-  // };
 
   const handleOtpRequest = () => {
     if (!email) {
@@ -46,20 +28,12 @@ export default function Login() {
       );
       return;
     }
-    // setIsOtpRequested(true);
   };
 
   const handlePasswordRequest = () => {
     setIsOtpRequested(false);
   };
 
-  // if (loggedIn) {
-  //   return (
-  //     <div className="h-16 w-16 bg-gradient-custom flex flex-col items-center justify-center p-4">
-  //       <SuccessLottiePlayer />
-  //     </div>
-  //   );
-  // }
   return (
     <div className="h-screen w-full bg-gradient-custom flex flex-col items-center justify-center p-4">
       <motion.div
@@ -71,7 +45,7 @@ export default function Login() {
         <h1 className="text-3xl font-bold pb-4 text-center text-gradient">
           Resume Your Journey.
         </h1>
-        <form onSubmit={() => {}} className="space-y-4">
+        <form onSubmit={() => { }} className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="email"

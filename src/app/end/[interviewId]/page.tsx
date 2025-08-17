@@ -1,30 +1,30 @@
 "use client";
 import { EvaluationDashboard } from "@/components/end/evaluation-dashboard";
-import { interviewStore } from "@/lib/utils/interviewStore";
 import { useEffect, useState } from "react";
 export default function Home() {
   const [evaluation, setEvaluation] = useState(null);
   const [error, setError] = useState("");
-  const conversation = interviewStore((state) => state.conversation);
 
   useEffect(() => {
     async function fetchEvaluation() {
+      const pathName = window.location.pathname;
+      const interviewId = pathName.split("/").pop();
       const response = await fetch("/api/save", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          conversation,
+          interviewId,
+          round: 'google-hr-end'
         }),
       });
       if (!response.ok) {
         throw new Error("Failed to fetch evaluation");
       }
       const data = await response.json();
-      console.log(data);
       if (data.success) {
-        setEvaluation(data.data.object);
+        setEvaluation(data.data);
       } else {
         setError("Failed to fetch evaluation");
       }
@@ -41,7 +41,6 @@ export default function Home() {
       setEvaluation(null);
       setError("");
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

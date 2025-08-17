@@ -66,3 +66,14 @@ export const getPrompts = async (round: string) => {
     return null;
   }
 };
+
+export const saveInterviewFeedback = async (interviewId: string, feedback: string) => {
+  return await prisma.interview.update({
+    where: {
+      id: interviewId,
+    },
+    data: {
+      feedback: feedback,
+    },
+  });
+}

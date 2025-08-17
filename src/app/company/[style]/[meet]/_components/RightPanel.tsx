@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ResizablePanel } from "../../../../../components/ui/resizable";
 import CountdownTimer from "../../../../../components/CountdownTimer";
 import CamScreen from "./CamScreen";
@@ -10,26 +10,34 @@ import {
 } from "@/components/lottie/dotlottie";
 import { interviewStore } from "@/lib/utils/interviewStore";
 import { useRouter } from "next/navigation";
-import { Conversation } from "@/app/company/[style]/[meet]/_components/Conversation";
+import { generalStore } from "@/lib/utils/generalStore";
+
 export default function RightPanel({
   minutes,
   seconds,
   setMinutes,
   setSeconds,
-  conversation,
   stopConversation,
 }: {
   minutes: number;
   seconds: number;
   setMinutes: React.Dispatch<React.SetStateAction<number>>;
   setSeconds: React.Dispatch<React.SetStateAction<number>>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  conversation: any;
   stopConversation: () => Promise<void>;
 }) {
   const router = useRouter();
-  const { isRecording, aiSpeaking } = interviewStore();
+  const interviewId = generalStore((state) => state.interviewId);
+  const { isRecording, aiSpeaking, stopRecording, endInterview } = interviewStore();
   const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (mediaStream) {
+        mediaStream.getTracks().forEach((track) => track.stop());
+      }
+      stopRecording();
+    };
+  }, [mediaStream, stopRecording]);
 
   return (
     <ResizablePanel
@@ -43,25 +51,25 @@ export default function RightPanel({
               mediaStream.getTracks().forEach((track) => track.stop());
             }
             await stopConversation();
-            router.replace("/end");
+            await endInterview();
+            router.push(`/end/${interviewId}`);
           }}
         >
           End Meeting
         </Button>
       </div>
+
       <CountdownTimer
         minutes={minutes}
         seconds={seconds}
         setMinutes={setMinutes}
         setSeconds={setSeconds}
       />
+
       <div className="flex rounded-lg shadow-sm p-2 my-4 bg-red-500">
         <CamScreen mediaStream={mediaStream} setMediaStream={setMediaStream} />
       </div>
-      <Conversation
-        conversation={conversation}
-        stopConversation={stopConversation}
-      />
+
       {isRecording && (
         <div className="flex justify-center items-center w-full">
           <UserLottiePlayer />

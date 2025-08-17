@@ -17,12 +17,14 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
   minutes: null,
   dsaQuestion: null,
   subtitles: null,
+  currentAudio: null,
   conversation: [
     {
       role: "system",
       content: `You are an AI assistant for a mock interview platform. You will ask the user questions and respond to their answers. You will also provide feedback on their performance.`,
     },
   ],
+  interviewEnded: false,
   setConversation: (conversation: Conversation[]) => set({ conversation }),
   setSubtitles: (subtitles: string | null) => set({ subtitles }),
   setSeconds: (seconds: string | null) => set({ seconds }),
@@ -30,7 +32,9 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
   setIsLoading: (loading: boolean) => set({ isLoading: loading }),
   setAiSpeaking: (speaking: boolean) => set({ aiSpeaking: speaking }),
   setIsRecording: (recording: boolean) => set({ isRecording: recording }),
+  setInterviewEnded: (ended: boolean) => set({ interviewEnded: ended }),
   playPing: async () => {
+    if (get().interviewEnded) return;
     const audio = new Audio("/sound/ping.mp3");
     await audio.play().catch((error) => {
       console.error("Error playing audio:", error);
@@ -74,6 +78,7 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
       );
       generalStore.getState().setStartAudio(audioBlob);
       set({ subtitles: data.reply });
+      get().playAudio(audioBlob);
       return {
         success: true,
         id: res.id,
@@ -88,31 +93,19 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
   },
   endInterview: async () => {
     try {
-      if (!generalStore.getState().candidate) return null;
       const interviewId = generalStore.getState().interviewId;
-      if (!interviewId) return null;
-      console.log("Ending interview", interviewId);
-      generalStore.getState().setInterviewId(null);
-      await MEDIA_RECORDER.stop();
-      const response = await fetch(`/api/end`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          interviewId: interviewId,
-        }),
-      });
-      const data = await response.json();
-      if (response.status === 500) return null;
-      console.log(data);
-      return data.data as string;
+      if (!interviewId) throw new Error("Interview not found");
+      await get().stopRecording();
+      set({ interviewEnded: true });
+      await get().stopAudio();
+      return;
     } catch (error) {
-      console.error("PDF download error:", error);
-      return null;
+      console.error(error);
+      return;
     }
   },
   startRecording: async () => {
+    if (get().interviewEnded) return;
     set({ isRecording: true });
     get().record();
   },
@@ -121,6 +114,7 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
     if (MEDIA_RECORDER !== null) MEDIA_RECORDER.stop();
   },
   record: async () => {
+    if (get().interviewEnded) return;
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       MEDIA_RECORDER = new MediaRecorder(stream);
       MEDIA_RECORDER.start();
@@ -184,35 +178,51 @@ export const interviewStore = create<InterviewStore>()((set, get) => ({
     });
   },
   playAudio: async (audioBlob: Blob) => {
+    if (get().interviewEnded) return;
+
     try {
       await get().playPing();
       set({ aiSpeaking: true });
+
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
-      set({ isLoading: false });
+
+      set({ currentAudio: audio, isLoading: false });
+
       audio.play();
-      await new Promise((resolve) => {
-        audio.onended = resolve;
+
+      await new Promise<void>((resolve) => {
+        audio.onended = () => {
+          resolve();
+        };
       });
+
       URL.revokeObjectURL(audioUrl);
       await get().playPing();
-      set({ aiSpeaking: false });
+      set({ aiSpeaking: false, currentAudio: null });
       get().startRecording();
     } catch (error) {
       console.error("Error during playback:", error);
     }
   },
+  stopAudio: () => {
+    const audio = get().currentAudio;
+    if (audio) {
+      audio.pause();
+      audio.currentTime = 0;
+      set({ aiSpeaking: false, currentAudio: null });
+    }
+  },
   sendAudio: async (audioBlob: Blob) => {
+    if (get().interviewEnded) return;
     const interviewId = generalStore.getState().interviewId;
     const seconds = get().seconds;
     const minutes = get().minutes;
-    console.log("Sending audio to server", interviewId, minutes, seconds);
 
     if (!audioBlob || !interviewId) {
       get().startRecording();
       return;
     }
-    console.log("Sending audio to server", interviewId, minutes, seconds);
     const formData = new FormData();
     formData.append("file", audioBlob, "recording.webm");
     formData.append("interviewId", interviewId);

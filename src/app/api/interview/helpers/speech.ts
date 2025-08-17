@@ -43,3 +43,21 @@ const getAudioBuffer = async (response: any) => {
 
   return Buffer.from(dataArray.buffer);
 };
+
+
+export const getText = async (audioFile: ArrayBuffer) => {
+  try {
+    const { result, error } = await deepgram.listen.prerecorded.transcribeFile(
+      Buffer.from(audioFile),
+      {
+        model: "nova-3",
+        smart_format: true,
+      }
+    );
+    if (error) throw error;
+    return result.results.channels[0].alternatives[0].transcript;
+  } catch (error) {
+    console.error("Error in getText:", error);
+    throw error;
+  }
+}
