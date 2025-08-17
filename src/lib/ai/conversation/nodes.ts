@@ -1,6 +1,6 @@
 import { HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
 import { aiModel } from "../../utils/ai";
-import { z } from "zod";
+import { z } from "zod4";
 import { getChatHistory, saveToDbUser, saveToDbModel, getPrompts } from "@/db/dbFunctions";
 import { getAudio, getText } from "@/app/api/interview/helpers/speech";
 import { InterviewStateType } from "./state";
